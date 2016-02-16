@@ -285,8 +285,8 @@
     },
     {
       "apiVersion": "[variables('armApiVersion')]",
-      "type": "Microsoft.Compute/virtualMachines/storageProfile",
-      "name": "[concat(variables('masterVMName'), '/storageProfile/datadisks/datadisk', copyIndex())]",
+      "type": "Microsoft.Compute/virtualMachines/storageProfile/dataDisks",
+      "name": "[concat(variables('masterVMName'), '/storageProfile/dataDisks/datadisk', copyIndex())]",
       "copy": {
 	      "name": "masterdatadiskscopy",
 	      "count": "[parameters('dataDiskCount')]"
