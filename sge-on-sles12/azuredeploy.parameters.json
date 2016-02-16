@@ -22,6 +22,12 @@
     },
     "workerNodeCount": {
       "value": 2
+    },
+    "dataDiskSize": {
+	    "value" : 64
+    },
+    "dataDiskCount": {
+	    "value" : 2
     }
   }
 }
