@@ -275,13 +275,13 @@
           },
           "dataDisks": [
             {
+              "name": "[concat('datadisk', copyIndex())]",
 	      "copy": {
 		      "name": "datadiskscopy",
 		      "count": "[parameters('dataDiskCount')]"
 		},
-              "name": "[concat('datadisk', copyIndex())]",
               "diskSizeGB": "[parameters('dataDiskSize')]",
-              "lun": "copyIndex()",
+              "lun": "[copyIndex()]",
               "vhd": {
                 "Uri":  "[concat('http://',variables('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('masterVMName'),'-datadisk', copyIndex(), '.vhd')]"
               },
