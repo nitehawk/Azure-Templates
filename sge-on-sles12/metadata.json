@@ -1,0 +1,7 @@
+{
+  "itemDisplayName": "Create a SGE cluster on SLES 12 HPC SKU",
+  "description": "Creates a SGE HPC cluster running SLES 12.  This cluster is ready to run Intel MPI workloads when used with A8 or A9 VMs.",
+  "githubUsername": "nitehawk",
+  "summary": "SGE HPC cluster",
+  "dateUpdated": "2016-02-16"
+}
