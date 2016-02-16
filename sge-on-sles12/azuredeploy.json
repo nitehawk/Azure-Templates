@@ -272,23 +272,7 @@
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
-          },
-          "dataDisks": [
-            {
-              "name": "[concat('datadisk', copyIndex())]",
-	      "copy": {
-		      "name": "datadiskscopy",
-		      "count": "[parameters('dataDiskCount')]"
-		},
-              "diskSizeGB": "[parameters('dataDiskSize')]",
-              "lun": "[copyIndex()]",
-              "vhd": {
-                "Uri":  "[concat('http://',variables('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('masterVMName'),'-datadisk', copyIndex(), '.vhd')]"
-              },
-              "caching": "None",
-              "createOption": "Empty"
-            }
-          ]
+          }
         },
         "networkProfile": {
           "networkInterfaces": [
@@ -298,6 +282,22 @@
           ]
         }
       }
+    },
+    {
+      "apiVersion": "[variables('armApiVersion')]",
+      "type": "Microsoft.Compute/virtualMachines/storageProfile/dataDisks",
+      "name": "[concat(variables('masterVMName'), '/storageProfile/datadisks/datadisk', copyIndex())]",
+      "copy": {
+	      "name": "masterdatadiskscopy",
+	      "count": "[parameters('dataDiskCount')]"
+	},
+      "diskSizeGB": "[parameters('dataDiskSize')]",
+      "lun": "[copyIndex()]",
+      "vhd": {
+	"Uri":  "[concat('http://',variables('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('masterVMName'),'-datadisk', copyIndex(), '.vhd')]"
+      },
+      "caching": "None",
+      "createOption": "Empty"
     },
     {
       "apiVersion": "[variables('armApiVersion')]",
