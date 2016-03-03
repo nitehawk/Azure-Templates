@@ -277,7 +277,7 @@
 	      	{
 		      "name": "datadisk0",
 		      "diskSizeGB": "[parameters('dataDiskSize')]",
-		      "lun": "2",
+		      "lun": "0",
 		      "vhd": {
 			"Uri":  "[concat('http://',variables('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('masterVMName'),'-datadisk0.vhd')]"
 		      },
@@ -287,7 +287,7 @@
 	      	{
 		      "name": "datadisk1",
 		      "diskSizeGB": "[parameters('dataDiskSize')]",
-		      "lun": "3",
+		      "lun": "1",
 		      "vhd": {
 			"Uri":  "[concat('http://',variables('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('masterVMName'),'-datadisk1.vhd')]"
 		      },
