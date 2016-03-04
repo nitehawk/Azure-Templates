@@ -3,7 +3,7 @@
 #
 # Assume we have a valid login, but verify we are in proper mode
 
-azure config mode arm
+#azure config mode arm
 
 # Create group
 GROUP=${1-democluster}
