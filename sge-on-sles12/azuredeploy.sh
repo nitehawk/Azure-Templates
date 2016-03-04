@@ -162,7 +162,7 @@ setup_hpc_user()
         chown $HPC_USER:$HPC_GROUP $SHARE_DATA
 
 	# Load SGE config
-	echo "source /opt/sge/default/common/setting.sh" >> $SHARE_HOME/$HPC_USER/.bashrc
+	echo "source /opt/sge/default/common/settings.sh" >> $SHARE_HOME/$HPC_USER/.bashrc
     else
         useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
     fi
@@ -209,6 +209,8 @@ setup_sge()
 	    /opt/sge/install_qmaster -auto sge.master.conf
 	    popd
 
+	    source /opt/sge/default/common/settings.sh
+
 	    # Add worker nodes as admin hosts
 	    for i in `seq 0 $LAST_WORKER_INDEX`; do qconf -ah ${WORKER_HOSTNAME_PREFIX}${i}; done
 	    
@@ -222,6 +224,7 @@ setup_sge()
 	    pushd /opt/sge
 	    /opt/sge/install_execd -auto sge.${HOST}.conf
 	    popd
+	    source /opt/sge/default/common/settings.sh
 
     fi
 }
