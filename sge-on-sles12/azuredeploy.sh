@@ -207,6 +207,7 @@ setup_sge()
 	    # Worker node
 	    # RPM install unneeded - shared /opt
 	    # Configure execd
+	    echo "nothing for worker (yet)"
     fi
 }
 
