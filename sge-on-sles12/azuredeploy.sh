@@ -23,6 +23,7 @@ LAST_WORKER_INDEX=$(($WORKER_COUNT - 1))
 # Shares
 SHARE_HOME=/share/home
 SHARE_DATA=/share/data
+SHARE_OPT=/opt
 
 
 # Hpc User
@@ -118,18 +119,22 @@ setup_shares()
 {
     mkdir -p $SHARE_HOME
     mkdir -p $SHARE_DATA
+    mkdir -p $SHARE_OPT
 
     if is_master; then
 	    setup_data_disks $SHARE_DATA
         echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
         echo "$SHARE_DATA    *(rw,async)" >> /etc/exports
+        echo "$SHARE_OPT     *(rw,async)" >> /etc/exports
         service nfsserver status && service nfsserver reload || service nfsserver start
     else
         echo "master:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
         echo "master:$SHARE_DATA $SHARE_DATA    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
+        echo "master:$SHARE_OPT $SHARE_OPT    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
         mount -a
         mount | grep "^master:$SHARE_HOME"
         mount | grep "^master:$SHARE_DATA"
+        mount | grep "^master:$SHARE_OPT"
     fi
 }
 
@@ -155,6 +160,9 @@ setup_hpc_user()
         chown $HPC_USER:$HPC_GROUP $SHARE_HOME/$HPC_USER/.ssh/authorized_keys
         chown $HPC_USER:$HPC_GROUP $SHARE_HOME/$HPC_USER/.ssh/config
         chown $HPC_USER:$HPC_GROUP $SHARE_DATA
+
+	# Load SGE config
+	echo "source /opt/sge/default/common/setting.sh" >> $SHARE_HOME/$HPC_USER/.bashrc
     else
         useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
     fi
@@ -178,8 +186,33 @@ setup_env()
 	echo "export I_MPI_DYNAMIC_CONNECTION=0" >> /etc/profile.d/hpc.sh
 }
 
+setup_sge()
+{
+    pkgs="xterm db48-utils xorg-x11-fonts xorg-x11-fonts-core"
+    zypper -n install $pkgs
+
+    if is_master; then
+	    # Master node
+	    # Install SGE RPMs
+	    # Download RPMs from repo
+	    wget $TEMPLATE_BASE_URL/rpm/gridengine-execd-8.1.8-1.x86_64.rpm
+	    wget $TEMPLATE_BASE_URL/rpm/gridengine-8.1.8-1.x86_64.rpm
+	    wget $TEMPLATE_BASE_URL/rpm/libhwloc5-1.9-13.1.x86_64.rpm 
+	    wget $TEMPLATE_BASE_URL/rpm/hwloc-data-1.9-13.1.x86_64.rpm
+	    wget $TEMPLATE_BASE_URL/rpm/gridengine-qmaster-8.1.8-1.x86_64.rpm
+	    wget $TEMPLATE_BASE_URL/rpm/gridengine-qmon-8.1.8-1.x86_64.rpm 
+	    rpm -ivh gridengine-execd-8.1.8-1.x86_64.rpm gridengine-8.1.8-1.x86_64.rpm libhwloc5-1.9-13.1.x86_64.rpm  hwloc-data-1.9-13.1.x86_64.rpm gridengine-qmaster-8.1.8-1.x86_64.rpm gridengine-qmon-8.1.8-1.x86_64.rpm
+	    # Configure qmaster
+    else
+	    # Worker node
+	    # RPM install unneeded - shared /opt
+	    # Configure execd
+    fi
+}
+
 add_sdk_repo
 install_pkgs
 setup_shares
 setup_hpc_user
 setup_env
+setup_sge
