@@ -204,8 +204,10 @@ setup_sge()
 	    rpm -ivh gridengine-execd-8.1.8-1.x86_64.rpm gridengine-8.1.8-1.x86_64.rpm libhwloc5-1.9-13.1.x86_64.rpm  hwloc-data-1.9-13.1.x86_64.rpm gridengine-qmaster-8.1.8-1.x86_64.rpm gridengine-qmon-8.1.8-1.x86_64.rpm
 	    # Configure qmaster
 	    wget $TEMPLATE_BASE_URL/sge.conf
-	    cat sge.conf | sed -e 's/xxCUREXECHOSTxx//' > sge.self.conf
-	    /opt/sge/install_qmaster -auto sge.self.conf
+	    cat sge.conf | sed -e 's/xxCUREXECHOSTxx//' > /opt/sge/sge.master.conf
+	    pushd /opt/sge
+	    /opt/sge/install_qmaster -auto sge.master.conf
+	    popd
 
 	    # Add worker nodes as admin hosts
 	    for i in `seq 0 $LAST_WORKER_INDEX`; do qconf -ah ${WORKER_HOSTNAME_PREFIX}${i}; done
@@ -214,9 +216,12 @@ setup_sge()
 	    # Worker node
 	    # RPM install unneeded - shared /opt
 	    # Configure execd
+	    HOST=`hostname`
 	    wget $TEMPLATE_BASE_URL/sge.conf
-	    cat sge.conf | sed -e "s/xxCUREXECHOSTxx/`hostname`/" > sge.self.conf
-	    /opt/sge/install_execd -auto sge.self.conf
+	    cat sge.conf | sed -e "s/xxCUREXECHOSTxx/${HOST}/" > /opt/sge/sge.${HOST}.conf
+	    pushd /opt/sge
+	    /opt/sge/install_execd -auto sge.${HOST}.conf
+	    popd
 
     fi
 }
