@@ -188,7 +188,7 @@ setup_env()
 
 setup_sge()
 {
-    pkgs="xterm db48-utils xorg-x11-fonts xorg-x11-fonts-core"
+    pkgs="xterm db48-utils xorg-x11-fonts xorg-x11-fonts-core libXm4"
     zypper -n install $pkgs
 
     if is_master; then
@@ -203,11 +203,21 @@ setup_sge()
 	    wget $TEMPLATE_BASE_URL/rpm/gridengine-qmon-8.1.8-1.x86_64.rpm 
 	    rpm -ivh gridengine-execd-8.1.8-1.x86_64.rpm gridengine-8.1.8-1.x86_64.rpm libhwloc5-1.9-13.1.x86_64.rpm  hwloc-data-1.9-13.1.x86_64.rpm gridengine-qmaster-8.1.8-1.x86_64.rpm gridengine-qmon-8.1.8-1.x86_64.rpm
 	    # Configure qmaster
+	    wget $TEMPLATE_BASE_URL/sge.conf
+	    cat sge.conf | sed -e 's/xxCUREXECHOSTxx//' > sge.self.conf
+	    /opt/sge/install_qmaster -auto sge.self.conf
+
+	    # Add worker nodes as admin hosts
+	    for i in `seq 0 $LAST_WORKER_INDEX`; do qconf -ah ${WORKER_HOSTNAME_PREFIX}${i}; done
+	    
     else
 	    # Worker node
 	    # RPM install unneeded - shared /opt
 	    # Configure execd
-	    echo "nothing for worker (yet)"
+	    wget $TEMPLATE_BASE_URL/sge.conf
+	    cat sge.conf | sed -e "s/xxCUREXECHOSTxx/`hostname`/" > sge.self.conf
+	    /opt/sge/install_execd -auto sge.self.conf
+
     fi
 }
 
