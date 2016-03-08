@@ -209,7 +209,9 @@ setup_sge()
 	    /opt/sge/install_qmaster -auto sge.master.conf
 	    popd
 
-	    source /opt/sge/default/common/settings.sh
+	    # Use a temporary environment file during install
+	    wget $TEMPLATE_BASE_URL/sge-installer-env
+	    source sge-installer-env
 
 	    # Add worker nodes as admin hosts
 	    for i in `seq 0 $LAST_WORKER_INDEX`; do qconf -ah ${WORKER_HOSTNAME_PREFIX}${i}; done
@@ -224,7 +226,9 @@ setup_sge()
 	    pushd /opt/sge
 	    /opt/sge/install_execd -auto sge.${HOST}.conf
 	    popd
-	    source /opt/sge/default/common/settings.sh
+	    # Use a temporary environment file during install
+	    wget $TEMPLATE_BASE_URL/sge-installer-env
+	    source sge-installer-env
 
     fi
 }
