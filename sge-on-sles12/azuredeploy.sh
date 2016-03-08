@@ -222,9 +222,9 @@ setup_sge()
 	    # Configure execd
 	    HOST=`hostname`
 	    wget $TEMPLATE_BASE_URL/sge.conf
-	    cat sge.conf | sed -e "s/xxCUREXECHOSTxx/${HOST}/" > /opt/sge/sge.${HOST}.conf
+	    cat sge.conf | sed -e "s/xxCUREXECHOSTxx/${HOST}/" > /tmp/sge.${HOST}.conf
 	    pushd /opt/sge
-	    /opt/sge/install_execd -auto sge.${HOST}.conf
+	    /opt/sge/install_execd -auto /tmp/sge.${HOST}.conf
 	    popd
 	    # Use a temporary environment file during install
 	    wget $TEMPLATE_BASE_URL/sge-installer-env
