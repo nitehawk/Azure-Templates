@@ -31,6 +31,10 @@ HPC_USER=$4
 HPC_UID=7007
 HPC_GROUP=users
 
+SGE_USER=sgeadmin
+SGE_UID=492
+SGE_GID=100
+
 
 # Returns 0 if this node is the master node.
 #
@@ -204,6 +208,8 @@ setup_sge()
 {
     pkgs="xterm db48-utils xorg-x11-fonts xorg-x11-fonts-core libXm4"
     zypper -n install $pkgs
+
+    useradd -c "SGE Admin" -g $SGE_GID -d /opt/sge -s /bin/bash -u $SGE_UID $SGE_USER
 
     if is_master; then
 	    # Master node
