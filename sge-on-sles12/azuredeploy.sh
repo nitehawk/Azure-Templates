@@ -186,6 +186,20 @@ setup_env()
 	echo "export I_MPI_DYNAMIC_CONNECTION=0" >> /etc/profile.d/hpc.sh
 }
 
+setup_hosts()
+{
+	
+	# Master
+	echo `hostname ${MASTER_HOSTNAME} | cut -d" " -f 4` $MASTER_HOSTNAME >> /etc/hosts
+
+	#Compute
+	for i in `seq 0 $LAST_WORKER_INDEX`;
+	do
+		CNAME=${WORKER_HOSTNAME_PREFIX}${i}
+		echo `hostname ${CNAME} | cut -d" " -f 4` $CNAME >> /etc/hosts
+	done
+}
+
 setup_sge()
 {
     pkgs="xterm db48-utils xorg-x11-fonts xorg-x11-fonts-core libXm4"
@@ -238,4 +252,5 @@ install_pkgs
 setup_shares
 setup_hpc_user
 setup_env
+setup_hosts
 setup_sge
