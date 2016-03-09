@@ -190,13 +190,13 @@ setup_hosts()
 {
 	
 	# Master
-	echo `hostname ${MASTER_HOSTNAME} | cut -d" " -f 4` $MASTER_HOSTNAME >> /etc/hosts
+	echo `host ${MASTER_HOSTNAME} | cut -d" " -f 4` $MASTER_HOSTNAME >> /etc/hosts
 
 	#Compute
 	for i in `seq 0 $LAST_WORKER_INDEX`;
 	do
 		CNAME=${WORKER_HOSTNAME_PREFIX}${i}
-		echo `hostname ${CNAME} | cut -d" " -f 4` $CNAME >> /etc/hosts
+		echo `host ${CNAME} | cut -d" " -f 4` $CNAME >> /etc/hosts
 	done
 }
 
