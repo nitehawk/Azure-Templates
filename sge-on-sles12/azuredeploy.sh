@@ -233,8 +233,14 @@ setup_sge()
 	    wget $TEMPLATE_BASE_URL/sge-installer-env
 	    source sge-installer-env
 
+	    qconf -as ${MASTER_HOSTNAME}
+
 	    # Add worker nodes as admin hosts
-	    for i in `seq 0 $LAST_WORKER_INDEX`; do qconf -ah ${WORKER_HOSTNAME_PREFIX}${i}; done
+	    for i in `seq 0 $LAST_WORKER_INDEX`
+	    do
+		qconf -ah ${WORKER_HOSTNAME_PREFIX}${i}
+		qconf -as ${WORKER_HOSTNAME_PREFIX}${i}
+	    done
 	    
     else
 	    # Worker node
