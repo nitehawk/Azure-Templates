@@ -238,7 +238,10 @@ setup_sge()
 	    
     else
 	    # Worker node
-	    # RPM install unneeded - shared /opt
+	    # Install dependencies
+	    wget $TEMPLATE_BASE_URL/rpm/libhwloc5-1.9-13.1.x86_64.rpm 
+	    wget $TEMPLATE_BASE_URL/rpm/hwloc-data-1.9-13.1.x86_64.rpm
+	    rpm -ivh libhwloc5-1.9-13.1.x86_64.rpm hwloc-data-1.9-13.1.x86_64.rpm
 	    # Configure execd
 	    HOST=`hostname`
 	    wget $TEMPLATE_BASE_URL/sge.conf
