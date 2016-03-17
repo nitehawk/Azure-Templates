@@ -8,8 +8,8 @@ if [[ $(id -u) -ne 0 ]] ; then
     exit 1
 fi
 
-if [ $# != 5 ]; then
-    echo "Usage: $0 <MasterHostname> <WorkerHostnamePrefix> <WorkerNodeCount> <HPCUserName> <TemplateBaseUrl>"
+if [ $# != 8 ]; then
+    echo "Usage: $0 <MasterHostname> <WorkerHostnamePrefix> <WorkerNodeCount> <HPCUserName> <TemplateBaseUrl> <StorageAcct> <Container> <StorageKey>"
     exit 1
 fi
 
@@ -17,7 +17,14 @@ fi
 MASTER_HOSTNAME=$1
 WORKER_HOSTNAME_PREFIX=$2
 WORKER_COUNT=$3
+HPC_USER=$4
 TEMPLATE_BASE_URL="$5"
+AZSTORE_ACCT="$6"
+AZSTORE_CONTAINER="$7"
+AZSTORE_KEY="$8"
+
+
+# Figure out the stuff that needs figured out
 LAST_WORKER_INDEX=$(($WORKER_COUNT - 1))
 
 # Shares
@@ -27,7 +34,6 @@ SHARE_OPT=/opt
 
 
 # Hpc User
-HPC_USER=$4
 HPC_UID=7007
 HPC_GROUP=users
 
@@ -262,6 +268,24 @@ setup_sge()
     fi
 }
 
+# This function will grab the helper script and download the application installer from the azure storage
+setup_apps()
+{
+    if is_master; then
+	# Grab azure storage helper script
+	wget $TEMPLATE_BASE_URL/azfileget.sh
+	chmod a+x azfileget.sh
+
+	# Grab the app installer from azure storage
+	./azfileget.sh $AZSTORE_ACCT $AZSTORE_CONTAINER $AZSTORE_KEY appinstall.sh
+
+	# Call installer script
+	chmod a+x appinstall.sh
+	./appinstall.sh $AZSTORE_ACCT $AZSTORE_CONTAINER $AZSTORE_KEY
+	
+    fi
+}
+
 add_sdk_repo
 install_pkgs
 setup_shares
@@ -269,3 +293,4 @@ setup_hpc_user
 setup_env
 setup_hosts
 setup_sge
+setup_apps

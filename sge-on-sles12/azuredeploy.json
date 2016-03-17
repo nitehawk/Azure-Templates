@@ -111,6 +111,24 @@
         "description": "Size of the worker nodes."
       }
     },
+    "storageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "This is the storage account for the application installs."
+      }
+    },
+    "storageContainer": {
+      "type": "string",
+      "metadata": {
+        "description": "This is the file storage container in the account that contains the application install scripts and data.  The deployment script downloads appinstall.sh from this container.    The script is called from the master node with the account name, container, and key as parameters.   'azfileget.sh' is available to download additional files from the storage container."
+      }
+    },
+    "storageAccountKey": {
+      "type": "string",
+      "metadata": {
+        "description": "This is the storage account key for the application installs."
+      }
+    },
     "workerNodeCount": {
       "type": "int",
       "defaultValue": 2,
@@ -167,7 +185,7 @@
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('networkSettings').virtualNetworkName)]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('networkSettings').subnet.dse.name)]",
     "templateBaseUrl": "https://raw.githubusercontent.com/nitehawk/Azure-Templates/master/sge-on-sles12/",
-    "installationCLI": "[concat('bash azuredeploy.sh ', variables('masterVMName'), ' ', variables('workerVMName'), ' ', parameters('workerNodeCount'), ' ', parameters('hpcUserName'), ' ', variables('templateBaseUrl'))]",
+    "installationCLI": "[concat('bash azuredeploy.sh ', variables('masterVMName'), ' ', variables('workerVMName'), ' ', parameters('workerNodeCount'), ' ', parameters('hpcUserName'), ' ', variables('templateBaseUrl'), ' ', variables('storageAccountName'), ' ', variables('storageContainer'), ' ', variables('storageAccountKey'))]",
     "storageAccountType": "Standard_LRS"
   },
   "resources": [

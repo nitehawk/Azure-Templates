@@ -23,6 +23,15 @@
     "workerNodeCount": {
       "value": 2
     },
+    "storageAccountName": {
+      "value": ""
+    },
+    "storageContainer": {
+      "value": ""
+    },
+    "storageAccountKey": {
+      "value": ""
+    },
     "dataDiskSize": {
 	    "value" : 64
     },
