@@ -196,6 +196,7 @@ setup_env()
 	echo "export I_MPI_DYNAMIC_CONNECTION=0" >> /etc/profile.d/hpc.sh
 }
 
+# Setup hosts file and do a couple system tasks
 setup_hosts()
 {
 	
@@ -208,6 +209,10 @@ setup_hosts()
 		CNAME=${WORKER_HOSTNAME_PREFIX}${i}
 		echo `host ${CNAME} | cut -d" " -f 4` $CNAME >> /etc/hosts
 	done
+
+	# Allow for gateway ports in SSH so we can remotely forward license manager ports
+	echo "GatewayPorts yes" >> /etc/ssh/sshd_config
+	service sshd restart
 }
 
 setup_sge()
