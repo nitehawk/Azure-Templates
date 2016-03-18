@@ -120,7 +120,7 @@
     "storageContainer": {
       "type": "string",
       "metadata": {
-        "description": "This is the file storage container in the account that contains the application install scripts and data.  The deployment script downloads appinstall.sh from this container.    The script is called from the master node with the account name, container, and key as parameters.   'azfileget.sh' is available to download additional files from the storage container."
+        "description": "This is the file storage container in the account that contains the application install scripts and data.  The deployment script downloads appinstall.sh from this container.    The script is called from the master node with the account name, container, and key as parameters.   'azfileget.sh' is available to download additional files from the storage container.  This container should also contain workerappinstall.sh to run on the worker nodes."
       }
     },
     "storageAccountKey": {

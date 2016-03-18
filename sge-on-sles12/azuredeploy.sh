@@ -282,7 +282,18 @@ setup_apps()
 	# Call installer script
 	chmod a+x appinstall.sh
 	./appinstall.sh $AZSTORE_ACCT $AZSTORE_CONTAINER $AZSTORE_KEY
-	
+    else
+	# Worker node
+	# Grab azure storage helper script
+	wget $TEMPLATE_BASE_URL/azfileget.sh
+	chmod a+x azfileget.sh
+
+	# Grab the app installer from azure storage
+	./azfileget.sh $AZSTORE_ACCT $AZSTORE_CONTAINER $AZSTORE_KEY workerappinstall.sh
+
+	# Call installer script
+	chmod a+x workerappinstall.sh
+	./workerappinstall.sh $MASTER_HOSTNAME $AZSTORE_ACCT $AZSTORE_CONTAINER $AZSTORE_KEY
     fi
 }
 
