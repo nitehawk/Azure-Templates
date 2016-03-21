@@ -89,11 +89,13 @@ install_pkgs()
 setup_data_disks()
 {
     mountPoint="$1"
-	createdPartitions=""
+    createdPartitions=""
 
-    # Loop through and partition disks until not found
-    #16:  for disk in sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm sdn sdo sdp sdq sdr; do
-    for disk in sdc sdd; do
+
+    # To work around an annoying azure behaviour where disks sometimes are attached in different orders,
+    # We will look at all 'sd' device files and add any disks we find without a partition to the raid0
+    # Positive side effect:  This allows us to change the number of data disks without changing the script
+    for disk in `ls /dev/sd* | sort | uniq -w8 -u | cut -d'/' -f3`
         fdisk -l /dev/$disk || break
         fdisk /dev/$disk << EOF
 n
